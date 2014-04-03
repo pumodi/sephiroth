@@ -1,4 +1,47 @@
+// Player/Enemy Functions
 var chooseRandomTarget = function() {};
+
+// Sets up the party array
+var party = [""];
+
+// Sets up the player objects
+player = new Object();
+player.level = 75;
+player.health = 20000;
+player.magicPoints = 400;
+player.attack = 123;
+player.defense = 130;
+player.magicAttack = 70;
+player.magicDefense = 154;
+player.dexterity = 80;
+player.evade = 1;
+player.fireAffinity = nil;
+player.iceAffinity = nil;
+player.lightningAffinity = nil;
+player.waterAffinity = nil;
+player.earthAffinity = nil;
+player.windAffinity = nil;
+player.gravityAffinity = nil;
+player.poisonAffinity = nil;
+player.holyAffinity = nil;
+player.statusImmunities = [""];
+player.attack = new Object();
+player.attack.limitBreak = function(target);
+player.attack.attack = function(target);
+player.attack.supernova = function(target);
+
+// Instantiates the party
+var cloud = new player();
+var tifa = new player();
+var barret = new player();
+
+// Main function for players
+cloud.main = function() {
+}
+tifa.main = function() {
+}
+barret.main = function(){
+}
 
 // Sets up the Sephiroth Object
 sephiroth = new Object();
@@ -40,6 +83,7 @@ sephiroth.attack.flyDown = function(target);
 sephiroth.stageCount = 0;
 sephiroth.moveSet = 0;
 
+// Sephiroths AI Routine
 sephiroth.main = function() {
 	sepiroth.magicPoints = 680;
 	sephiroth.stageCount = sephiroth.stageCount + 1;
@@ -69,9 +113,9 @@ sephiroth.main = function() {
 	
 	else if (sephiroth.stageCount == 3) {
 		var partyMemberWithHighestHealth = 0;
-		for (partyMember[i] = 0; partyMember[i] < party.length; partyMember[i]++) {
-			if (partyMember[i].health > partyMember[partyMemberWithHighestHealth].health) {
-				partyMemberWithHighestHealth = partyMember[i];
+		for (party[i] = 0; party[i] < party.length; party[i]++) {
+			if (party[i].health > party[partyMemberWithHighestHealth].health) {
+				partyMemberWithHighestHealth = party[i];
 			}
 			else {
 				partyMemberWithHighestHealth = partyMemberWithHighestHealth;
@@ -112,3 +156,30 @@ sephiroth.main = function() {
 	sephirotstageCount = 0
 	}
 }
+
+// Turn Processing
+var currentTurn = 0;
+var firstTurn = sephiroth.main();
+var secondTurn = cloud.main();
+var thirdTurn = tifa.main();
+var fourthTurn = barret.main();
+
+var processTurn = function() {
+	for (currentTurn < 4; currentTurn = 0; currentTurn++) {
+		if (currentTurn = 0) {
+			sephiroth.main();
+		}
+		else if (currentTurn = 1){
+			cloud.main();
+		}
+		else if (currentTurn = 2){
+			tifa.main();
+		}
+		else if (currentTurn = 3){
+			currentTurn = -1;
+			barret.main();
+		}
+	}
+}
+
+processTurn();
