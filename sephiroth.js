@@ -110,10 +110,26 @@ sephiroth.attack.attack = function(target) {
 	abilityPower = 1;
 	basicAttackActualDamage()
 }
-sephiroth.attack.paleHorse = function(target);
-sephiroth.attack.deen = function(target);
-sephiroth.attack.supernova = function(target);
-sephiroth.attack.wall = function(target);
+sephiroth.attack.paleHorse = function(target) {
+	abilityPower = (13/16);
+	magicAttackActualDamage();
+	var statusEffectSeed = random();
+	target.negativeStatusEffects.push("sadness", "frog", "small");
+}
+sephiroth.attack.deen = function(target) {
+	abilityPower = (9/16);
+	magicAttackActualDamage();
+}
+sephiroth.attack.supernova = function(target) {
+	target.health = (target.health * 1/16);
+	var statusEffectSeed = random();
+	if (statusEffectSeed < 0.33) {
+		target.negativeStatusEffects.push("confusion", "silence","slow");
+	}
+}
+sephiroth.attack.wall = function(target) {
+	sephiroth.positiveStatusEffects.push("wall");
+}
 sephiroth.attack.shadowFlare = function(target)
 	abilityUser = sephiroth;
 	target = chooseRandomTarget();
