@@ -1,38 +1,39 @@
+/*jslint node: true */
 // Sets up faction arrays
 var party = [""];
 var creatures = [""];
 
 // Sets up stats handling
 var damage = 0;
-var target = nil;
+var target = 0;
 var isReflectable = false;
 var baseDamage = 0;
 var maxDamage = 0;
 var abilityPower = 0;
 
 // Sets up damage calculation functions
-var basicAttackBaseDamage = function(abilityUser) {
-	baseDamage = (abilityUser.attack + ((abilityUser.attack + abilityUser.level)/32)*((abilityUser.attack * abilityUser.level)/32));
-}
-var basicAttackMaxDamage = function(target) {
+var basicAttackBaseDamage = function (abilityUser) {
+	baseDamage = (abilityUser.attack + ((abilityUser.attack + abilityUser.level) / 32) * ((abilityUser.attack * abilityUser.level) / 32));
+};
+var basicAttackMaxDamage = function (target) {
 	basicAttackBaseDamage();
-	maxDamage = ((abilityPower*(512-target.defense)*baseDamage)/(16*512))
-}
-var basicAttackActualDamage = function() {
+	maxDamage = ((abilityPower * (512-target.defense) * baseDamage) / (16 * 512));
+};
+var basicAttackActualDamage = function () {
 	basicAttackMaxDamage();
-	damage = (maxDamage * ((3841 + random(255))/4096)
-}
-var magicAttackBaseDamage = function(abilityUser) {
-	baseDamage = (abilityUser.magicAttack + ((abilityUser.magicAttack + abilityUser.level)/32)*((abilityUser.magicAttack * abilityUser.level)/32));
-}
-var magicAttackMaxDamage = function(target) {
+	damage = (maxDamage * ((3841 + random(255)) / 4096));
+};
+var magicAttackBaseDamage = function (abilityUser) {
+	baseDamage = (abilityUser.magicAttack + ((abilityUser.magicAttack + abilityUser.level) / 32) * ((abilityUser.magicAttack * abilityUser.level) / 32));
+};
+var magicAttackMaxDamage = function (target) {
 	magicAttackBaseDamage();
-	maxDamage = ((abilityPower*(512-target.magicDefense)*baseDamage)/(16*512))
-}
-var magicAttackActualDamage = function() {
+	maxDamage = ((abilityPower * (512-target.magicDefense) * baseDamage) / (16 * 512));
+};
+var magicAttackActualDamage = function () {
 	magicAttackMaxDamage();
-	damage = (maxDamage * ((3841 + random(255))/4096)
-}
+	damage = (maxDamage * ((3841 + random(255)) / 4096));
+};
 
 // Sets up the player objects
 player = new Object();
@@ -45,22 +46,28 @@ player.magicAttack = 70;
 player.magicDefense = 154;
 player.dexterity = 80;
 player.evade = 1;
-player.fireAffinity = nil;
-player.iceAffinity = nil;
-player.lightningAffinity = nil;
-player.waterAffinity = nil;
-player.earthAffinity = nil;
-player.windAffinity = nil;
-player.gravityAffinity = nil;
-player.poisonAffinity = nil;
-player.holyAffinity = nil;
+player.fireAffinity = 0;
+player.iceAffinity = 0;
+player.lightningAffinity = 0;
+player.waterAffinity = 0;
+player.earthAffinity = 0;
+player.windAffinity = 0;
+player.gravityAffinity = 0;
+player.poisonAffinity = 0;
+player.holyAffinity = 0;
 player.statusImmunities = [""];
 player.positiveStatusEffects = [""];
 player.negativeStatusEffects = [""];
 player.attack = new Object();
-player.attack.limitBreak = function(target);
-player.attack.attack = function(target);
-player.attack.supernova = function(target);
+player.attack.limitBreak = function (target) {
+	// Do something...
+};
+player.attack.attack = function (target) {
+	// Do something...
+};
+player.attack.supernova = function (target) {
+	// Do something...
+};
 
 // Instantiates the party
 var cloud = new player();
@@ -69,12 +76,12 @@ var barret = new player();
 party.push(cloud, tifa, barret);
 
 // Main function for players
-cloud.main = function() {
-}
-tifa.main = function() {
-}
-barret.main = function(){
-}
+cloud.main = function () {
+};
+tifa.main = function () {
+};
+barret.main = function (){
+};
 
 // Sets up and instantiates Sephiroth
 sephiroth = new Object();
@@ -90,80 +97,83 @@ sephiroth.evade = 1;
 sephiroth.experienceGrantableOnWin = 0;
 sephiroth.abilityPointsGrantableOnWin = 0;
 sephiroth.gilGrantableOnWin = 0;
-sephiroth.fireAffinity = nil;
-sephiroth.iceAffinity = nil;
-sephiroth.lightningAffinity = nil;
-sephiroth.waterAffinity = nil;
+sephiroth.fireAffinity = 0;
+sephiroth.iceAffinity = 0;
+sephiroth.lightningAffinity = 0;
+sephiroth.waterAffinity = 0;
 sephiroth.earthAffinity = "Immune";
-sephiroth.windAffinity = nil;
+sephiroth.windAffinity = 0;
 sephiroth.gravityAffinity = "Immune";
-sephiroth.poisonAffinity = nil;
-sephiroth.holyAffinity = nil;
+sephiroth.poisonAffinity = 0;
+sephiroth.holyAffinity = 0;
 sephiroth.statusImmunities = ["Death","Sleep","Poison","Sadness","Fury","Confuse","Silence","Frog","Small","SlowNumber","Petrify","DeathSentence","Manipulate","Berserk","Paralyze","Slow","Stop","Darkness"];
 sephiroth.positiveStatusEffects = [""];
 sephiroth.negativeStatusEffects = [""];
 sephiroth.slow = false;
 sephiroth.attack = new Object();
-sephiroth.attack.attack = function(target) {
+sephiroth.attack.attack = function (target) {
 	abilityUser = sephiroth;
 	target = chooseRandomTarget();
 	abilityPower = 1;
-	basicAttackActualDamage()
-}
-sephiroth.attack.paleHorse = function(target) {
+	basicAttackActualDamage();
+};
+sephiroth.attack.paleHorse = function (target) {
 	abilityPower = (13/16);
 	magicAttackActualDamage();
 	var statusEffectSeed = random();
 	target.negativeStatusEffects.push("sadness", "frog", "small");
-}
-sephiroth.attack.deen = function(target) {
+};
+sephiroth.attack.deen = function (target) {
 	abilityPower = (9/16);
 	magicAttackActualDamage();
-}
-sephiroth.attack.supernova = function(target) {
+};
+sephiroth.attack.supernova = function (target) {
 	target.health = (target.health * 1/16);
 	var statusEffectSeed = random();
 	if (statusEffectSeed < 0.33) {
 		target.negativeStatusEffects.push("confusion", "silence","slow");
 	}
-}
-sephiroth.attack.wall = function(target) {
+};
+sephiroth.attack.wall = function (target) {
 	sephiroth.positiveStatusEffects.push("wall");
-}
-sephiroth.attack.shadowFlare = function(target)
-	abilityUser = sephiroth;
-	target = chooseRandomTarget();
-	abilityPower = 7.8125;
-	magicAttackActualDamage()
-	isReflectable = true;
-	target.health = (target.health - damage);
-	sephiroth.magicPoints = sephiroth.magicPoints - 100;
-}
-sephiroth.attack.deSpell = function(target) {
+};
+sephiroth.attack.shadowFlare = function (target)
+abilityUser = sephiroth;
+target = chooseRandomTarget();
+abilityPower = 7.8125;
+magicAttackActualDamage();
+isReflectable = true;
+target.health = (target.health - damage);
+sephiroth.magicPoints = sephiroth.magicPoints - 100;
+sephiroth.attack.deSpell = function (target) {
 	for (i = 0; i < 3; i++) {
 		var numberOfPositiveStatusEffects = party[i].positiveStatusEffects.length();
 		party[i].positiveStatusEffects.splice(numberOfPositiveStatusEffects, numberOfPositiveStatusEffects);
 	}
 	sephiroth.magicPoints = sephiroth.magicPoints - 20;
-}
-sephiroth.attack.heartlessAngel = function(target) {
+};
+sephiroth.attack.heartlessAngel = function (target) {
 	isReflectable = false;
 	target.health = 1;
-}
-sephiroth.attack.breakAbility = function(target) {
+};
+sephiroth.attack.breakAbility = function (target) {
 	abilityUser = sephiroth;
 	target = chooseRandomTarget();
 	abilityPower = 6.25;
-	magicAttackActualDamage()
+	magicAttackActualDamage();
 	isReflectable = false;
 	target.health = target.health - damage;
 	var petrifySeed = random();
 	if (petrifySeed < 0.32) {
 		target.negativeStatusEffects.push("petrify");
 	}
-}
-sephiroth.attack.flyUp = function(target);
-sephiroth.attack.flyDown = function(target);
+};
+sephiroth.attack.flyUp = function (target) {
+
+};
+sephiroth.attack.flyDown = function (target) {
+
+};
 sephiroth.stageCount = 0;
 sephiroth.moveSet = 0;
 creatures.push(sephiroth);
@@ -172,11 +182,11 @@ creatures.push(sephiroth);
 var currentTurn = 0;
 
 // Sephiroths AI Routine
-sephiroth.main = function() {
+sephiroth.main = function () {
 	sepiroth.magicPoints = 680;
 	sephiroth.stageCount = sephiroth.stageCount + 1;
 	if (sephiroth.stageCount == 1)  {
-		if (sepiroth.slow == true) {
+		if (sepiroth.slow === true) {
 			sephiroth.attack.deSpell(self);
 		}
 		else if (sephiroth.moveSet == 1)  {
@@ -185,12 +195,12 @@ sephiroth.main = function() {
 		}
 		else {
 			sephiroth.attack.wall(self);
-			sephiroth.moveSet = 1
+			sephiroth.moveSet = 1;
 		}
 	}
 
 	else if (sephiroth.stageCount == 2) {
-		if (sephiroth.moveSet == 0) {
+		if (sephiroth.moveSet === 0) {
 			sephiroth.attack.deen(party);
 		}
 		else {
@@ -214,7 +224,7 @@ sephiroth.main = function() {
 
 	else if (sephiroth.stageCount == 4) {
 		sephiroth.attack.flyUp(self);
-		sephiroth.stageCount = 1
+		sephiroth.stageCount = 1;
 		sephiroth.inPhysicalAttackRange = false;
 	}
 
@@ -239,14 +249,14 @@ sephiroth.main = function() {
 	}
 
 	else {
-	sephiroth.attack.flyDown(self);
-	sephiroth.inPhysicalAttackRange = true;
-	sephirotstageCount = 0
+		sephiroth.attack.flyDown(self);
+		sephiroth.inPhysicalAttackRange = true;
+		sephirotstageCount = 0;
 	}
-}
+};
 
 // Player/Enemy Functions
-var chooseRandomTarget = function() {
+var chooseRandomTarget = function () {
 	var randomTargetSeed = random();
 	if (charactersFaction == party) {
 		if (randomTargetSeed > 0 && randomTargetSeed < 0.33) {
@@ -270,25 +280,25 @@ var chooseRandomTarget = function() {
 			target = creatures[2];
 		}
 	}
-}
+};
 
 // Turn processing routine
-var processTurn = function() {
-	for (currentTurn < 4; currentTurn = 0; currentTurn++) {
-		if (currentTurn = 0) {
+var processTurn = function () {
+	for (currentTurn < 4; currentTurn === 0; currentTurn++) {
+		if (currentTurn === 0) {
 			sephiroth.main();
 		}
-		else if (currentTurn = 1){
+		else if (currentTurn == 1){
 			cloud.main();
 		}
-		else if (currentTurn = 2){
+		else if (currentTurn == 2){
 			tifa.main();
 		}
-		else if (currentTurn = 3){
+		else if (currentTurn == 3){
 			currentTurn = -1;
 			barret.main();
 		}
 	}
-}
+};
 
 processTurn();
