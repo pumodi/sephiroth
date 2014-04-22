@@ -35,44 +35,73 @@ var magicAttackActualDamage = function () {
 	damage = (maxDamage * ((3841 + random(255)) / 4096));
 };
 
-// Sets up the player objects
-player = new Object();
-player.level = 75;
-player.health = 20000;
-player.magicPoints = 400;
-player.attack = 123;
-player.defense = 130;
-player.magicAttack = 70;
-player.magicDefense = 154;
-player.dexterity = 80;
-player.evade = 1;
-player.fireAffinity = 0;
-player.iceAffinity = 0;
-player.lightningAffinity = 0;
-player.waterAffinity = 0;
-player.earthAffinity = 0;
-player.windAffinity = 0;
-player.gravityAffinity = 0;
-player.poisonAffinity = 0;
-player.holyAffinity = 0;
-player.statusImmunities = [""];
-player.positiveStatusEffects = [""];
-player.negativeStatusEffects = [""];
-player.attack = new Object();
-player.attack.limitBreak = function (target) {
-	// Do something...
-};
-player.attack.attack = function (target) {
-	// Do something...
-};
-player.attack.supernova = function (target) {
-	// Do something...
-};
+// Sets up the battle participant object constructor
+var battleParticipant = new Object();
+battleParticipant.level = 75;
+battleParticipant.health = 20000;
+battleParticipant.magicPoints = 400;
+battleParticipant.attack = 123;
+battleParticipant.defense = 130;
+battleParticipant.magicAttack = 70;
+battleParticipant.magicDefense = 154;
+battleParticipant.dexterity = 80;
+battleParticipant.evade = 1;
+battleParticipant.fireAffinity = 0;
+battleParticipant.equippedMateria = new Array();
+battleParticipant.iceAffinity = 0;
+battleParticipant.lightningAffinity = 0;
+battleParticipant.waterAffinity = 0;
+battleParticipant.earthAffinity = 0;
+battleParticipant.windAffinity = 0;
+battleParticipant.gravityAffinity = 0;
+battleParticipant.poisonAffinity = 0;
+battleParticipant.holyAffinity = 0;
+battleParticipant.statusImmunities = [""];
+battleParticipant.positiveStatusEffects = [""];
+battleParticipant.negativeStatusEffects = [""];
+battleParticipant.experienceGrantableOnWin = 0;
+battleParticipant.abilityPointsGrantableOnWin = 0;
+battleParticipant.gilGrantableOnWin = 0;
+battleParticipant.ability = [
+	['abilityName'],
+	['abilityType'],
+	['abilitiyMagicPointCost'],
+	['abilityStatusEffect'],
+	['abilityElementalType'],
+	['abilityRequiredMateria'],
+	['abilityPower'],
+	['abilityFunction']
+];
+battleParticipant.faction = 0;
 
 // Instantiates the party
-var cloud = new player();
-var tifa = new player();
-var barret = new player();
+var cloud = new battleParticipant();
+cloud.level = 75;
+cloud.health = 20000;
+cloud.magicPoints = 400;
+cloud.attack = 123;
+cloud.defense = 130;
+cloud.magicAttack = 70;
+cloud.magicDefense = 154;
+cloud.dexterity = 80;
+cloud.evade = 1;
+cloud.fireAffinity = 0;
+cloud.iceAffinity = 0;
+cloud.lightningAffinity = 0;
+cloud.waterAffinity = 0;
+cloud.earthAffinity = 0;
+cloud.windAffinity = 0;
+cloud.gravityAffinity = 0;
+cloud.poisonAffinity = 0;
+cloud.holyAffinity = 0;
+cloud.statusImmunities = [""];
+cloud.positiveStatusEffects = [""];
+cloud.negativeStatusEffects = [""];
+cloud.faction = 0;
+
+var tifa = new battleParticipant();
+var barret = new battleParticipant();
+
 party.push(cloud, tifa, barret);
 
 // Main function for players
@@ -84,7 +113,7 @@ barret.main = function (){
 };
 
 // Sets up and instantiates Sephiroth
-sephiroth = new Object();
+sephiroth = new battleParticipant();
 sephiroth.level = 87;
 sephiroth.health = 400000;
 sephiroth.magicPoints = 680;
@@ -110,6 +139,7 @@ sephiroth.statusImmunities = ["Death","Sleep","Poison","Sadness","Fury","Confuse
 sephiroth.positiveStatusEffects = [""];
 sephiroth.negativeStatusEffects = [""];
 sephiroth.slow = false;
+sephiroth.faction = 1;
 sephiroth.attack = new Object();
 sephiroth.attack.attack = function (target) {
 	abilityUser = sephiroth;
