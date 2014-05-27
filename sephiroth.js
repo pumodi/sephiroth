@@ -1,119 +1,107 @@
-/*jslint node: true */
 // Sets up faction arrays
 var party = [""];
 var creatures = [""];
 
 // Sets up stats handling
 var damage = 0;
-var target = 0;
+var target = nil;
 var isReflectable = false;
 var baseDamage = 0;
 var maxDamage = 0;
 var abilityPower = 0;
 
 // Sets up damage calculation functions
-var basicAttackBaseDamage = function (abilityUser) {
-	baseDamage = (abilityUser.attack + ((abilityUser.attack + abilityUser.level) / 32) * ((abilityUser.attack * abilityUser.level) / 32));
-};
-var basicAttackMaxDamage = function (target) {
+var basicAttackBaseDamage = function(abilityUser) {
+	baseDamage = (abilityUser.attack + ((abilityUser.attack + abilityUser.level)/32)*((abilityUser.attack * abilityUser.level)/32));
+}
+var basicAttackMaxDamage = function(target) {
 	basicAttackBaseDamage();
-	maxDamage = ((abilityPower * (512-target.defense) * baseDamage) / (16 * 512));
-};
-var basicAttackActualDamage = function () {
+	maxDamage = ((abilityPower*(512-target.defense)*baseDamage)/(16*512))
+}
+var basicAttackActualDamage = function() {
 	basicAttackMaxDamage();
-	damage = (maxDamage * ((3841 + random(255)) / 4096));
-};
-var magicAttackBaseDamage = function (abilityUser) {
-	baseDamage = (abilityUser.magicAttack + ((abilityUser.magicAttack + abilityUser.level) / 32) * ((abilityUser.magicAttack * abilityUser.level) / 32));
-};
-var magicAttackMaxDamage = function (target) {
+	damage = (maxDamage * ((3841 + random(255))/4096)
+}
+var magicAttackBaseDamage = function(abilityUser) {
+	baseDamage = (abilityUser.magicAttack + ((abilityUser.magicAttack + abilityUser.level)/32)*((abilityUser.magicAttack * abilityUser.level)/32));
+}
+var magicAttackMaxDamage = function(target) {
 	magicAttackBaseDamage();
-	maxDamage = ((abilityPower * (512-target.magicDefense) * baseDamage) / (16 * 512));
-};
-var magicAttackActualDamage = function () {
+	maxDamage = ((abilityPower*(512-target.magicDefense)*baseDamage)/(16*512))
+}
+var magicAttackActualDamage = function() {
 	magicAttackMaxDamage();
-	damage = (maxDamage * ((3841 + random(255)) / 4096));
-};
+	damage = (maxDamage * ((3841 + random(255))/4096)
+}
 
-// Sets up the battle participant object constructor
-var battleParticipant = new Object();
-battleParticipant.level = 75;
-battleParticipant.health = 20000;
-battleParticipant.magicPoints = 400;
-battleParticipant.attack = 123;
-battleParticipant.defense = 130;
-battleParticipant.magicAttack = 70;
-battleParticipant.magicDefense = 154;
-battleParticipant.dexterity = 80;
-battleParticipant.evade = 1;
-battleParticipant.fireAffinity = 0;
-battleParticipant.equippedMateria = new Array();
-battleParticipant.iceAffinity = 0;
-battleParticipant.lightningAffinity = 0;
-battleParticipant.waterAffinity = 0;
-battleParticipant.earthAffinity = 0;
-battleParticipant.windAffinity = 0;
-battleParticipant.gravityAffinity = 0;
-battleParticipant.poisonAffinity = 0;
-battleParticipant.holyAffinity = 0;
-battleParticipant.statusImmunities = [""];
-battleParticipant.positiveStatusEffects = [""];
-battleParticipant.negativeStatusEffects = [""];
-battleParticipant.experienceGrantableOnWin = 0;
-battleParticipant.abilityPointsGrantableOnWin = 0;
-battleParticipant.gilGrantableOnWin = 0;
-battleParticipant.ability = [
-	['abilityName'],
-	['abilityType'],
-	['abilitiyMagicPointCost'],
-	['abilityStatusEffect'],
-	['abilityElementalType'],
-	['abilityRequiredMateria'],
-	['abilityPower'],
-	['abilityFunction']
-];
-battleParticipant.faction = 0;
+// Handles Limit Gauge updates
+var limitBreakGaugeUpdate = function() {
+	if (charactersFaction == party) {
+		var limitGaugeStatusMultiplier = 1;
+		var limitGaugeDamageValue = 1;
+		var limitGaugeMaxHP = 1;
+		var limitGaugeLimitConstant = 1;
+		for (i in player.positiveStatusEffects) {
+			if (this[i] == "Fury") {
+				limitBreakGaugeUpdate = 2;
+			}
+			else limitGaugeStatusMultiplier = 1;
+		}
+		for (i in player.negativeStatusEffects) {
+			if (this[i] == "Sadness") {
+				limitGaugeStatusMultiplier = 0.5;
+			}
+		}
+		var limitGaugeUpdateValue = (((300 x limitGaugeDamageValue) /limitGaugeMaxHP) * (((256*limitGaugeStatusMultiplier) / limitGaugeLimitConstant)));
+		target.limitGauge = (player.LimitGauge + limitGaugeUpdateValue);
+	}
+}
+
+// Sets up the player objects
+player = new Object();
+player.level = 0;
+player.health = 0;
+player.magicPoints = 0;
+player.attack = 0;
+player.defense = 0;
+player.magicAttack = 0;
+player.magicDefense = 0;
+player.dexterity = 0;
+player.evade = 1;
+player.fireAffinity = nil;
+player.iceAffinity = nil;
+player.lightningAffinity = nil;
+player.waterAffinity = nil;
+player.earthAffinity = nil;
+player.windAffinity = nil;
+player.gravityAffinity = nil;
+player.poisonAffinity = nil;
+player.holyAffinity = nil;
+player.statusImmunities = [""];
+player.positiveStatusEffects = [""];
+player.negativeStatusEffects = [""];
+player.attack = new Object();
+player.attack.limitBreak = function(target);
+player.attack.attack = function(target);
+player.attack.magic = function(target);
+player.limitGauge = 0;
 
 // Instantiates the party
-var cloud = new battleParticipant();
-cloud.level = 75;
-cloud.health = 20000;
-cloud.magicPoints = 400;
-cloud.attack = 123;
-cloud.defense = 130;
-cloud.magicAttack = 70;
-cloud.magicDefense = 154;
-cloud.dexterity = 80;
-cloud.evade = 1;
-cloud.fireAffinity = 0;
-cloud.iceAffinity = 0;
-cloud.lightningAffinity = 0;
-cloud.waterAffinity = 0;
-cloud.earthAffinity = 0;
-cloud.windAffinity = 0;
-cloud.gravityAffinity = 0;
-cloud.poisonAffinity = 0;
-cloud.holyAffinity = 0;
-cloud.statusImmunities = [""];
-cloud.positiveStatusEffects = [""];
-cloud.negativeStatusEffects = [""];
-cloud.faction = 0;
-
-var tifa = new battleParticipant();
-var barret = new battleParticipant();
-
+var cloud = new player();
+var tifa = new player();
+var barret = new player();
 party.push(cloud, tifa, barret);
 
 // Main function for players
-cloud.main = function () {
-};
-tifa.main = function () {
-};
-barret.main = function (){
-};
+cloud.main = function() {
+}
+tifa.main = function() {
+}
+barret.main = function(){
+}
 
 // Sets up and instantiates Sephiroth
-sephiroth = new battleParticipant();
+sephiroth = new Object();
 sephiroth.level = 87;
 sephiroth.health = 400000;
 sephiroth.magicPoints = 680;
@@ -126,84 +114,80 @@ sephiroth.evade = 1;
 sephiroth.experienceGrantableOnWin = 0;
 sephiroth.abilityPointsGrantableOnWin = 0;
 sephiroth.gilGrantableOnWin = 0;
-sephiroth.fireAffinity = 0;
-sephiroth.iceAffinity = 0;
-sephiroth.lightningAffinity = 0;
-sephiroth.waterAffinity = 0;
+sephiroth.fireAffinity = nil;
+sephiroth.iceAffinity = nil;
+sephiroth.lightningAffinity = nil;
+sephiroth.waterAffinity = nil;
 sephiroth.earthAffinity = "Immune";
-sephiroth.windAffinity = 0;
+sephiroth.windAffinity = nil;
 sephiroth.gravityAffinity = "Immune";
-sephiroth.poisonAffinity = 0;
-sephiroth.holyAffinity = 0;
+sephiroth.poisonAffinity = nil;
+sephiroth.holyAffinity = nil;
 sephiroth.statusImmunities = ["Death","Sleep","Poison","Sadness","Fury","Confuse","Silence","Frog","Small","SlowNumber","Petrify","DeathSentence","Manipulate","Berserk","Paralyze","Slow","Stop","Darkness"];
 sephiroth.positiveStatusEffects = [""];
 sephiroth.negativeStatusEffects = [""];
 sephiroth.slow = false;
-sephiroth.faction = 1;
 sephiroth.attack = new Object();
-sephiroth.attack.attack = function (target) {
+sephiroth.attack.attack = function(target) {
 	abilityUser = sephiroth;
 	target = chooseRandomTarget();
 	abilityPower = 1;
-	basicAttackActualDamage();
-};
-sephiroth.attack.paleHorse = function (target) {
+	basicAttackActualDamage()
+}
+sephiroth.attack.paleHorse = function(target) {
 	abilityPower = (13/16);
 	magicAttackActualDamage();
 	var statusEffectSeed = random();
 	target.negativeStatusEffects.push("sadness", "frog", "small");
-};
-sephiroth.attack.deen = function (target) {
+}
+sephiroth.attack.deen = function(target) {
 	abilityPower = (9/16);
 	magicAttackActualDamage();
-};
-sephiroth.attack.supernova = function (target) {
+}
+sephiroth.attack.supernova = function(target) {
 	target.health = (target.health * 1/16);
 	var statusEffectSeed = random();
 	if (statusEffectSeed < 0.33) {
 		target.negativeStatusEffects.push("confusion", "silence","slow");
 	}
-};
-sephiroth.attack.wall = function (target) {
+}
+sephiroth.attack.wall = function(target) {
 	sephiroth.positiveStatusEffects.push("wall");
-};
-sephiroth.attack.shadowFlare = function (target)
-abilityUser = sephiroth;
-target = chooseRandomTarget();
-abilityPower = 7.8125;
-magicAttackActualDamage();
-isReflectable = true;
-target.health = (target.health - damage);
-sephiroth.magicPoints = sephiroth.magicPoints - 100;
-sephiroth.attack.deSpell = function (target) {
+}
+sephiroth.attack.shadowFlare = function(target)
+	abilityUser = sephiroth;
+	target = chooseRandomTarget();
+	abilityPower = 7.8125;
+	magicAttackActualDamage()
+	isReflectable = true;
+	target.health = (target.health - damage);
+	sephiroth.magicPoints = sephiroth.magicPoints - 100;
+}
+sephiroth.attack.deSpell = function(target) {
 	for (i = 0; i < 3; i++) {
 		var numberOfPositiveStatusEffects = party[i].positiveStatusEffects.length();
 		party[i].positiveStatusEffects.splice(numberOfPositiveStatusEffects, numberOfPositiveStatusEffects);
 	}
 	sephiroth.magicPoints = sephiroth.magicPoints - 20;
-};
-sephiroth.attack.heartlessAngel = function (target) {
+}
+sephiroth.attack.heartlessAngel = function(target) {
 	isReflectable = false;
 	target.health = 1;
-};
-sephiroth.attack.breakAbility = function (target) {
+}
+sephiroth.attack.breakAbility = function(target) {
 	abilityUser = sephiroth;
 	target = chooseRandomTarget();
 	abilityPower = 6.25;
-	magicAttackActualDamage();
+	magicAttackActualDamage()
 	isReflectable = false;
 	target.health = target.health - damage;
 	var petrifySeed = random();
 	if (petrifySeed < 0.32) {
 		target.negativeStatusEffects.push("petrify");
 	}
-};
-sephiroth.attack.flyUp = function (target) {
-
-};
-sephiroth.attack.flyDown = function (target) {
-
-};
+}
+sephiroth.attack.flyUp = function(target);
+sephiroth.attack.flyDown = function(target);
 sephiroth.stageCount = 0;
 sephiroth.moveSet = 0;
 creatures.push(sephiroth);
@@ -212,11 +196,11 @@ creatures.push(sephiroth);
 var currentTurn = 0;
 
 // Sephiroths AI Routine
-sephiroth.main = function () {
+sephiroth.main = function() {
 	sepiroth.magicPoints = 680;
 	sephiroth.stageCount = sephiroth.stageCount + 1;
 	if (sephiroth.stageCount == 1)  {
-		if (sepiroth.slow === true) {
+		if (sepiroth.slow == true) {
 			sephiroth.attack.deSpell(self);
 		}
 		else if (sephiroth.moveSet == 1)  {
@@ -225,12 +209,12 @@ sephiroth.main = function () {
 		}
 		else {
 			sephiroth.attack.wall(self);
-			sephiroth.moveSet = 1;
+			sephiroth.moveSet = 1
 		}
 	}
 
 	else if (sephiroth.stageCount == 2) {
-		if (sephiroth.moveSet === 0) {
+		if (sephiroth.moveSet == 0) {
 			sephiroth.attack.deen(party);
 		}
 		else {
@@ -254,7 +238,7 @@ sephiroth.main = function () {
 
 	else if (sephiroth.stageCount == 4) {
 		sephiroth.attack.flyUp(self);
-		sephiroth.stageCount = 1;
+		sephiroth.stageCount = 1
 		sephiroth.inPhysicalAttackRange = false;
 	}
 
@@ -279,14 +263,14 @@ sephiroth.main = function () {
 	}
 
 	else {
-		sephiroth.attack.flyDown(self);
-		sephiroth.inPhysicalAttackRange = true;
-		sephirotstageCount = 0;
+	sephiroth.attack.flyDown(self);
+	sephiroth.inPhysicalAttackRange = true;
+	sephirotstageCount = 0
 	}
-};
+}
 
 // Player/Enemy Functions
-var chooseRandomTarget = function () {
+var chooseRandomTarget = function() {
 	var randomTargetSeed = random();
 	if (charactersFaction == party) {
 		if (randomTargetSeed > 0 && randomTargetSeed < 0.33) {
@@ -310,25 +294,25 @@ var chooseRandomTarget = function () {
 			target = creatures[2];
 		}
 	}
-};
+}
 
 // Turn processing routine
-var processTurn = function () {
-	for (currentTurn < 4; currentTurn === 0; currentTurn++) {
-		if (currentTurn === 0) {
+var processTurn = function() {
+	for (currentTurn < 4; currentTurn = 0; currentTurn++) {
+		if (currentTurn = 0) {
 			sephiroth.main();
 		}
-		else if (currentTurn == 1){
+		else if (currentTurn = 1){
 			cloud.main();
 		}
-		else if (currentTurn == 2){
+		else if (currentTurn = 2){
 			tifa.main();
 		}
-		else if (currentTurn == 3){
+		else if (currentTurn = 3){
 			currentTurn = -1;
 			barret.main();
 		}
 	}
-};
+}
 
 processTurn();
