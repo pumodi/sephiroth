@@ -9,20 +9,22 @@ var isReflectable = false;
 var baseDamage = 0;
 var maxDamage = 0;
 var abilityPower = 0;
+var inPhysicalAttackRange = true;
+var inRangedAttackRange = false;
 
 // Sets up damage calculation functions
-var basicAttackBaseDamage = function(abilityUser) {
+var basicAttackBaseDamage = function (abilityUser) {
 	baseDamage = (abilityUser.attack + ((abilityUser.attack + abilityUser.level)/32)*((abilityUser.attack * abilityUser.level)/32));
 }
-var basicAttackMaxDamage = function(target) {
+var basicAttackMaxDamage = function (target) {
 	basicAttackBaseDamage();
 	maxDamage = ((abilityPower*(512-target.defense)*baseDamage)/(16*512))
-}
+	}
 var basicAttackActualDamage = function() {
 	basicAttackMaxDamage();
 	damage = (maxDamage * ((3841 + random(255))/4096)
-}
-var magicAttackBaseDamage = function(abilityUser) {
+	}
+	var magicAttackBaseDamage = function(abilityUser) {
 	baseDamage = (abilityUser.magicAttack + ((abilityUser.magicAttack + abilityUser.level)/32)*((abilityUser.magicAttack * abilityUser.level)/32));
 }
 var magicAttackMaxDamage = function(target) {
@@ -186,8 +188,15 @@ sephiroth.attack.breakAbility = function(target) {
 		target.negativeStatusEffects.push("petrify");
 	}
 }
-sephiroth.attack.flyUp = function(target);
-sephiroth.attack.flyDown = function(target);
+sephiroth.attack.flyUp = function(target) {
+	target.inPhysicalAttackRange = false;
+	target.inRangedAttackRange = true;
+};
+sephiroth.attack.flyDown = function(target) {
+	target.inPhysicalAttackRange = true;
+	target.inRangedAttackRange = true;
+};
+
 sephiroth.stageCount = 0;
 sephiroth.moveSet = 0;
 creatures.push(sephiroth);
@@ -238,8 +247,7 @@ sephiroth.main = function() {
 
 	else if (sephiroth.stageCount == 4) {
 		sephiroth.attack.flyUp(self);
-		sephiroth.stageCount = 1
-		sephiroth.inPhysicalAttackRange = false;
+		sephiroth.stageCount = 1;
 	}
 
 	else if (sephiroth.stageCount == 5) {
@@ -264,8 +272,7 @@ sephiroth.main = function() {
 
 	else {
 	sephiroth.attack.flyDown(self);
-	sephiroth.inPhysicalAttackRange = true;
-	sephirotstageCount = 0
+	sephiroth.stageCount = 0;
 	}
 }
 
